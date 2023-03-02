@@ -1,15 +1,5 @@
 from rest_framework import serializers
-from enumchoicefield import ChoiceEnum, EnumChoiceField
 from library.models import Book, Cover
-
-# class CoverSerializer(serializers.Serializer):
-#     value = serializers.CharField()
-#
-#     def to_representation(self, instance):
-#         return {'value': instance.value}
-#
-#     def to_internal_value(self, data):
-#         return Cover(data['value'])
 
 
 
@@ -18,5 +8,10 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = '__all__'
+        fields = ("id","cover","title","author","inventory","daily_fee")
+
+    def hide(self):
+
+        self.instance.hidden = True
+        self.instance.save()
 

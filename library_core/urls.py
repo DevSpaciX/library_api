@@ -24,6 +24,7 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/library/", include("library.urls",namespace="books-endpoint")),
+    path("api/library/", include("borrowing.urls",namespace="borrowing-endpoint")),
     path("users/", include("user.urls",namespace="users-endpoint")),
 
 

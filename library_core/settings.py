@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "library",
     "rest_framework",
     "user",
-    "rest_framework.authtoken"
+    "rest_framework.authtoken",
+    "borrowing",
 ]
 
 MIDDLEWARE = [

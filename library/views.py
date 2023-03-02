@@ -8,7 +8,7 @@ from library.serializers import BookSerializer
 
 class BookViewSet(ModelViewSet):
     serializer_class = BookSerializer
-    queryset = Book.objects.all()
+    queryset = Book.objects.filter(need_to_refill=False)
     def get_permissions(self):
         if self.action == 'list':
             permission_classes = [AllowAny]
