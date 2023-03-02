@@ -10,3 +10,5 @@ class Borrow(models.Model):
     actual_return = models.DateField(blank=True,null=True)
     book = models.ForeignKey(Book,on_delete=models.PROTECT)
     user = models.ForeignKey(User,on_delete=models.PROTECT)
+    def __str__(self):
+        return f"{self.user.email} - {self.book.title}"

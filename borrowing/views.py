@@ -11,7 +11,6 @@ from rest_framework.viewsets import ModelViewSet
 
 from borrowing.models import Borrow
 from borrowing.serializers import BorrowSerializer, BorrowListSerializer, BorrowReturnSerializer
-from library.permissions import IsAdminOrIfAuthenticatedReadOnly
 
 
 class MyPagination(PageNumberPagination):
@@ -22,7 +21,7 @@ class MyPagination(PageNumberPagination):
 
 class BorrowViewSet(ModelViewSet):
     serializer_class = BorrowSerializer
-    queryset = Borrow.objects.all()
+    queryset = Borrow.objects.select_related("book", "user")
     pagination_class = MyPagination
     permission_classes = [IsAuthenticated]
 
@@ -58,33 +57,13 @@ class BorrowViewSet(ModelViewSet):
 
             if borrow.actual_return is not None:
                 raise ValidationError("This book has already been returned.")
-
             borrow.actual_return = timezone.now()
             borrow.save()
-
             book = borrow.book
             book.inventory += 1
-
-            # Check if need_to_refill flag should be set to True
             if book.inventory >= 1 and book.need_to_refill == True:
                 book.need_to_refill = False
-
-            # Use a transaction to ensure that both the book and borrow objects are saved together
-            with transaction.atomic():
-                try:
-                    book.save()
-                except Exception as e:
-                    # If saving the book fails, roll back the transaction and raise an error
-                    transaction.set_rollback(True)
-                    raise ValidationError("Could not update book inventory: " + str(e))
-
-                try:
-                    borrow.save()
-                except Exception as e:
-                    # If saving the borrow object fails, roll back the transaction and raise an error
-                    transaction.set_rollback(True)
-                    raise ValidationError("Could not update borrow object: " + str(e))
-
+            book.save()
             return Response({"status": "Your book was successfully returned"})
 
         return Response({"error": "You must check the return_book checkbox."},
