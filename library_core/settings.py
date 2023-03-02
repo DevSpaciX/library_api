@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,11 +39,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "library",
     "rest_framework",
     "user",
     "rest_framework.authtoken",
     "borrowing",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -59,7 +63,7 @@ ROOT_URLCONF = "library_core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -142,3 +146,15 @@ AUTH_USER_MODEL = "user.User"
 
 TELEGRAM_BOT_TOKEN = "5778173608:AAEkfqphOJjflf0NxOByAvzpPu-RRFkJSpY"
 TELEGRAM_CHAT_ID = "-1001842697907"
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_URL = "redis://localhost:6379"
+CELERY_TIMEZONE = "Europe/Kiev"
+CELERY_IMPORTS = [
+    "library.tasks",
+]
+CELERY_BEAT_SCHEDULE = {
+    'send_overdue_book_returns': {
+        'task': 'library.tasks.send_overdue_book_returns',
+        'schedule': crontab(),  # Run every day at midnight
+    },
+}
