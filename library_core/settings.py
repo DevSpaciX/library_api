@@ -9,11 +9,12 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
-
 from celery.schedules import crontab
-
+from dotenv import load_dotenv
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-*)6_m=f*nx#&@s9(q66f&(zr5)a!mhg)$)aa@=w*8756)%bj=h"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "borrowing",
     "django_celery_beat",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -63,7 +65,7 @@ ROOT_URLCONF = "library_core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -134,7 +136,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
@@ -144,10 +147,10 @@ SIMPLE_JWT = {
 }
 AUTH_USER_MODEL = "user.User"
 
-TELEGRAM_BOT_TOKEN = "5778173608:AAEkfqphOJjflf0NxOByAvzpPu-RRFkJSpY"
-TELEGRAM_CHAT_ID = "-1001842697907"
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_URL = "redis://localhost:6379"
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_RESULT_URL = os.getenv("CELERY_RESULT_URL")
 CELERY_TIMEZONE = "Europe/Kiev"
 CELERY_IMPORTS = [
     "library.tasks",

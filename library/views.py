@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from library.models import Book
@@ -9,6 +8,7 @@ from library.serializers import BookSerializer
 class BookViewSet(ModelViewSet):
     serializer_class = BookSerializer
     queryset = Book.objects.filter(need_to_refill=False)
+
     def get_permissions(self):
         if self.action == 'list':
             permission_classes = [AllowAny]

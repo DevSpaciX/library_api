@@ -1,4 +1,6 @@
 from django.db import transaction
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.pagination import PageNumberPagination
 from django.utils import timezone
 from rest_framework import status
@@ -26,13 +28,17 @@ class BorrowViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        """Retrieve the borrows with filters"""
         queryset = self.queryset
         user_id = self.request.query_params.get("user_id")
         is_active = self.request.query_params.get("is_active")
+        print(is_active)
         if user_id:
             queryset = self.queryset.filter(user_id=user_id)
-        if is_active:
+        if str(is_active) == "true":
             queryset = self.queryset.filter(actual_return=None)
+        if str(is_active) == "false":
+            queryset = self.queryset.filter(actual_return=not None)
         if self.request.user.is_staff:
             return queryset
         return queryset.filter(user=self.request.user).distinct()
@@ -49,6 +55,7 @@ class BorrowViewSet(ModelViewSet):
 
     @action(methods=["POST"], detail=True, url_path="return")
     def return_book(self, request, pk=None):
+        """Endpoint for returning book and close the borrow"""
         borrow = get_object_or_404(Borrow, pk=pk)
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
@@ -68,3 +75,21 @@ class BorrowViewSet(ModelViewSet):
 
         return Response({"error": "You must check the return_book checkbox."},
                         status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "user_id",
+                type=OpenApiTypes.INT,
+                description="Filter borrows by user id (ex. ?user_id=2)",
+            ),
+            OpenApiParameter(
+                "is_active",
+                type=OpenApiTypes.BOOL,
+                description="Filter active borrows (ex. ?is_active=True)",
+            ),
+
+        ]
+        )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
