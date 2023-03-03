@@ -159,6 +159,6 @@ CELERY_IMPORTS = [
 CELERY_BEAT_SCHEDULE = {
     "send_overdue_book_returns": {
         "task": "library.tasks.send_overdue_book_returns",
-        "schedule": crontab(),  # Run every day at midnight
+        "schedule": crontab(minute=0, hour=0),  # Run every day at midnight
     },
 }
