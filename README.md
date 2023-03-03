@@ -1,17 +1,19 @@
-# Cinema API
-- Api service for cinema managment written on DRF
+![scalable-vector-graphics-book-icon-book-logo-material-512x512-png-clipart-download](https://user-images.githubusercontent.com/102595649/222734460-aad08eaa-c5d2-415e-a5ab-92dbaee20b56.png)
+
+# Library API
+- Api service for library managment written in DRF
 
 ## Feauters:
-- JWT authenticated
-- Admin panel /admin/
-- Documentation is located via /api/doc/swagger/
-- Managing borrowings and return books
-- Telegram alerts when new borrow is created
-- Telegram statistic about overdue borrowings every midnight ( celery )
-- Book automatickly hiding and getting status need_to_refill if book inventory = 0
-- Creating books with 2 types of covers 
-- Filtering borrows by status and user id ( customer )
-- Docker app starts only when db is available ( custom command via management/commands )
+- JWT authentication
+- Admin panel at /admin/
+- Documentation located at /api/doc/swagger/
+- Management of borrowings and book returns
+- Telegram alerts when a new borrowing is created
+- Telegram statistics about overdue borrowings every midnight (Celery)
+- Books are automatically hidden and given the status "need_to_refill" when the book inventory reaches 0
+- Creating books with two types of covers
+- Filtering borrows by status and user ID (customer)
+
 
 ## Installing using GitHub:
 ```python
@@ -31,3 +33,4 @@ python manage.py runserver
 - Get user token via /api/user/token/
 - Authorize with it on /api/doc/swagger/ OR 
 - Install ModHeader extention and create Request header with value ```Bearer <Your access tokekn>```
+![2023-03-03_15-37](https://user-images.githubusercontent.com/102595649/222734414-b504c4f3-c5e0-42d7-9624-ebb4d298d76f.png)
