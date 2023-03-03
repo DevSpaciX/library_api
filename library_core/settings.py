@@ -14,6 +14,7 @@ from datetime import timedelta
 from pathlib import Path
 from celery.schedules import crontab
 from dotenv import load_dotenv
+
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "library",
     "rest_framework",
     "user",
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "borrowing",
     "django_celery_beat",
     "drf_spectacular",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -143,7 +144,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=123321),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": True
+    "ROTATE_REFRESH_TOKENS": True,
 }
 AUTH_USER_MODEL = "user.User"
 
@@ -156,8 +157,8 @@ CELERY_IMPORTS = [
     "library.tasks",
 ]
 CELERY_BEAT_SCHEDULE = {
-    'send_overdue_book_returns': {
-        'task': 'library.tasks.send_overdue_book_returns',
-        'schedule': crontab(),  # Run every day at midnight
+    "send_overdue_book_returns": {
+        "task": "library.tasks.send_overdue_book_returns",
+        "schedule": crontab(),  # Run every day at midnight
     },
 }

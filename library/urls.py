@@ -5,7 +5,7 @@ from library.views import BookViewSet
 router = SimpleRouter()
 router.register("books", BookViewSet, basename="books")
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]
 
 app_name = "books-endpoint"

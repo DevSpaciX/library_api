@@ -12,12 +12,16 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from borrowing.models import Borrow
-from borrowing.serializers import BorrowSerializer, BorrowListSerializer, BorrowReturnSerializer
+from borrowing.serializers import (
+    BorrowSerializer,
+    BorrowListSerializer,
+    BorrowReturnSerializer,
+)
 
 
 class MyPagination(PageNumberPagination):
     page_size = 5  # количество объектов на странице
-    page_size_query_param = 'page_size'  # название GET-параметра для установки количества объектов на странице
+    page_size_query_param = "page_size"  # название GET-параметра для установки количества объектов на странице
     max_page_size = 10  # максимальное количество объектов на странице
 
 
@@ -53,6 +57,7 @@ class BorrowViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    @transaction.atomic()
     @action(methods=["POST"], detail=True, url_path="return")
     def return_book(self, request, pk=None):
         """Endpoint for returning book and close the borrow"""
@@ -64,6 +69,8 @@ class BorrowViewSet(ModelViewSet):
 
             if borrow.actual_return is not None:
                 raise ValidationError("This book has already been returned.")
+            if self.request.user != borrow.user:
+                raise ValidationError("You can`t return book which not yours")
             borrow.actual_return = timezone.now()
             borrow.save()
             book = borrow.book
@@ -71,10 +78,15 @@ class BorrowViewSet(ModelViewSet):
             if book.inventory >= 1 and book.need_to_refill == True:
                 book.need_to_refill = False
             book.save()
-            return Response({"status": "Your book was successfully returned"})
+            return Response(
+                {"status": "Your book was successfully returned"},
+                status=status.HTTP_200_OK,
+            )
 
-        return Response({"error": "You must check the return_book checkbox."},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "You must check the return_book checkbox."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     @extend_schema(
         parameters=[
@@ -88,8 +100,7 @@ class BorrowViewSet(ModelViewSet):
                 type=OpenApiTypes.BOOL,
                 description="Filter active borrows (ex. ?is_active=True)",
             ),
-
         ]
-        )
+    )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
