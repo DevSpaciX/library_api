@@ -1,4 +1,4 @@
-![scalable-vector-graphics-book-icon-book-logo-material-512x512-png-clipart-download](https://user-images.githubusercontent.com/102595649/222734460-aad08eaa-c5d2-415e-a5ab-92dbaee20b56.png)
+![scalable-vector-graphics-book-icon-book-logo-material-200x200-png-clipart-download](https://user-images.githubusercontent.com/102595649/222734460-aad08eaa-c5d2-415e-a5ab-92dbaee20b56.png)
 
 # Library API
 - Api service for library managment written in DRF
@@ -33,4 +33,7 @@ python manage.py runserver
 - Get user token via /api/user/token/
 - Authorize with it on /api/doc/swagger/ OR 
 - Install ModHeader extention and create Request header with value ```Bearer <Your access tokekn>```
+## Screenshots:
 ![2023-03-03_15-37](https://user-images.githubusercontent.com/102595649/222734414-b504c4f3-c5e0-42d7-9624-ebb4d298d76f.png)
+![image](https://user-images.githubusercontent.com/102595649/222735049-2cbcb9ce-ced1-42a5-8618-b0a92813fcb4.png)
+![image](https://user-images.githubusercontent.com/102595649/222735137-ccd60faa-89a0-407c-832f-db957783cc57.png)
