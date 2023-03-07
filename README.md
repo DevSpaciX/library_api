@@ -46,7 +46,7 @@
 
 ## Env variables sense:
 TELEGRAM_CHAT_ID=<YOUR_TELEGRAM_CHAT_ID>
-### Connect telegram alerts on your machine:
+### Get TELEGRAM_CHAT_ID and connect telegram alerts:
 1. Add the Telegram BOT to your group.
 2. https://api.telegram.org/bot5778173608:AAEkfqphOJjflf0NxOByAvzpPu-RRFkJSpY/getUpdates
 3. Look for "chat" object 
