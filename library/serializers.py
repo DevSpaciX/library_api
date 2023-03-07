@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from library.models import Book, Cover
+
+from library.models import Book
 
 
 class BookSerializer(serializers.ModelSerializer):
-    cover = serializers.ChoiceField(choices=("Hard", "Soft"))
 
     class Meta:
         model = Book

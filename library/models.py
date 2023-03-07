@@ -1,20 +1,16 @@
-from django.core.validators import MinValueValidator
 from django.db import models
-
-from enumchoicefield import ChoiceEnum, EnumChoiceField
-
-
-class Cover(ChoiceEnum):
-    soft = "Soft"
-    hard = "Hard"
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=100)
-    author = models.CharField(max_length=100)
-    cover = EnumChoiceField(Cover, default=Cover.hard)
-    inventory = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    daily_fee = models.DecimalField(decimal_places=2, max_digits=5)
+    class Enum(models.IntegerChoices):
+        HARD = 0
+        SOFT = 1
+
+    title = models.CharField(max_length=128)
+    author = models.CharField(max_length=128)
+    cover = models.BooleanField(choices=Enum.choices)
+    inventory = models.PositiveIntegerField()
+    daily_fee = models.DecimalField(max_digits=5, decimal_places=2)
     need_to_refill = models.BooleanField(default=False)
 
     def __str__(self):

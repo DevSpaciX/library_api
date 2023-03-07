@@ -87,8 +87,11 @@ WSGI_APPLICATION = "library_core.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.environ["POSTGRES_HOST"],
+        "NAME": os.environ["POSTGRES_DB"],
+        "USER": os.environ["POSTGRES_USER"],
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
     }
 }
 
@@ -148,10 +151,10 @@ SIMPLE_JWT = {
 }
 AUTH_USER_MODEL = "user.User"
 
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_BOT_TOKEN = "5778173608:AAEkfqphOJjflf0NxOByAvzpPu-RRFkJSpY"
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
-CELERY_RESULT_URL = os.getenv("CELERY_RESULT_URL")
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_URL = "redis://redis:6379"
 CELERY_TIMEZONE = "Europe/Kiev"
 CELERY_IMPORTS = [
     "library.tasks",

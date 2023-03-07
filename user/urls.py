@@ -1,9 +1,7 @@
-from django.urls import path, include
-from rest_framework.routers import SimpleRouter
+from django.urls import path
+from rest_framework.authtoken import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from library.views import BookViewSet
-from rest_framework.authtoken import views
 from user.views import CreateUserView, ManageUserView
 
 urlpatterns = [

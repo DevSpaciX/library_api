@@ -1,18 +1,12 @@
 from django.template.defaultfilters import lower
 from django.urls import reverse
-from rest_framework.test import APITestCase
-from rest_framework.permissions import AllowAny, IsAdminUser
-from django.urls import reverse
 from rest_framework import status
-from library.models import Book, Cover
-from library.serializers import BookSerializer
-from library.views import BookViewSet
 from rest_framework.test import APIClient
-from rest_framework import status
+from rest_framework.test import APITestCase
 
+from library.models import Book, Cover
 
 BOOK_URL = reverse("books-endpoint:books-list")
-# BOOK_DETAIL_URL = reverse('books-endpoint:books-detail')
 
 
 client = APIClient()

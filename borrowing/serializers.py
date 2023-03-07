@@ -6,7 +6,6 @@ from rest_framework.exceptions import ValidationError
 from borrowing.models import Borrow
 from borrowing.telegram_alert import send_message_to_channel
 from library.models import Book
-from library_core import settings
 
 
 class BorrowSerializer(serializers.ModelSerializer):
