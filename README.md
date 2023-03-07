@@ -14,6 +14,48 @@
 - Creating books with two types of covers
 - Filtering borrows by status and user ID (customer)
 
+## Endpoints sense:
+
+### USER :
+
+- [POST] /users/register/   (register your user)
+- [POST] /users/login/   (login your user)
+- [GET] /users/me   (info about yourself)
+- [PUT] /users/me   (update all info about yourself)
+- [PATCH] /users/me  (partial update of info about yourself)
+- [POST] /users/token (get your JWT token for access)
+- [POST] /users/token/refresh (update your access token)
+
+### BOOK :
+
+- [POST] /api/library/books/   (create nem book)
+- [GET] /api/library/books/   (list of all books)
+- [GET] /api/library/books/{id}   (detail info about book)
+- [PUT] /api/library/books/{id}   (update all book instance)
+- [PATCH] /api/library/books/{id}   (partial update of book instance)
+- [DELETE] /api/library/books/{id}   (delete book with chosen id)
+
+### BORROWS :
+
+- [GET] /api/library/borrowings/   (list of all borrowings)
+- [GET] /api/library/borrowings/{id}   (detail info about borrow)
+- [PUT] /api/library/borrowings/{id}   (update all borrow instance)
+- [PATCH] /api/library/borrowings/{id}   (partial update of borrow instance)
+- [DELETE] /api/library/borrowings/{id}   (delete borrow with chosen id)
+- [DELETE] /api/library/borrowings/{id}/return   (return book with given borrow id)
+
+## Env variables sense:
+TELEGRAM_CHAT_ID=<YOUR_TELEGRAM_CHAT_ID>
+### Connect telegram alerts on your machine:
+1. Add the Telegram BOT to your group.
+2. https://api.telegram.org/bot5778173608:AAEkfqphOJjflf0NxOByAvzpPu-RRFkJSpY/getUpdates
+3. Look for "chat" object 
+- SECRET_KEY=your secret django key (can be random)
+- POSTGRES_USER=your database username
+- POSTGRES_PASSWORD=your database password
+- POSTGRES_DB=your database name
+- POSTGRES_HOST=select database image here
+- POSTGRES_PORT=5432
 
 ## Installing using GitHub:
 ```python
@@ -22,11 +64,7 @@ python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 open .env.sample and change enviroment variables on yours !Rename file from .env.sample to .env
-python manage.py migrate
-docker run -d -p 6379:6379 redis 
-celery -A library_core worker --loglevel=info
-celery -A library_core beat --loglevel=info
-python manage.py runserver
+docker-compose up
 ```
 ## Getting access:
 - Create user via /api/user/register/
