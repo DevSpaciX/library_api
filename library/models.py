@@ -13,9 +13,9 @@ class Book(models.Model):
     daily_fee = models.DecimalField(max_digits=5, decimal_places=2)
     need_to_refill = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
 
-    def clean_inventory(self):
+    def clean_inventory(self) -> None:
         if self.inventory == 0:
             self.need_to_refill = True

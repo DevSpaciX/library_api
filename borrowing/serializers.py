@@ -1,4 +1,5 @@
 import asyncio
+from typing import Dict, Any
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -13,7 +14,7 @@ class BorrowSerializer(serializers.ModelSerializer):
         model = Borrow
         fields = ("expected_return", "book")
 
-    def create(self, validated_data):
+    def create(self, validated_data: Dict[str, Any]) -> Borrow:
         book_update = Book.objects.get(title=validated_data["book"])
         if book_update.inventory > 0:
             book_update.inventory -= 1
@@ -37,9 +38,16 @@ class BorrowListSerializer(BorrowSerializer):
         fields = "__all__"
 
 
-class BorrowReturnSerializer(BorrowSerializer):
-    return_book = serializers.BooleanField(default=False)
+class BorrowDetailSerializer(BorrowSerializer):
+    book = serializers.CharField(source="book.title")
+    user = serializers.CharField(source="user.email")
 
     class Meta:
         model = Borrow
-        fields = ("return_book",)
+        fields = "__all__"
+
+
+class BorrowReturnSerializer(BorrowSerializer):
+    class Meta:
+        model = Borrow
+        fields = ()

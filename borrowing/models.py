@@ -11,5 +11,5 @@ class Borrow(models.Model):
     book = models.ForeignKey(Book, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user.email} - {self.book.title}"

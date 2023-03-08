@@ -7,9 +7,4 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ("id", "cover", "title", "author", "inventory", "daily_fee")
-
-    def hide(self):
-
-        self.instance.hidden = True
-        self.instance.save()
+        fields = ("cover", "title", "author", "inventory", "daily_fee")

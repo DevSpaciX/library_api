@@ -4,8 +4,6 @@ from borrowing.views import BorrowViewSet
 
 router = SimpleRouter()
 router.register("borrowings", BorrowViewSet, basename="borrowing")
-urlpatterns = [
-    path("", include(router.urls)),
-]
+urlpatterns = router.urls
 
 app_name = "borrow-endpoint"
