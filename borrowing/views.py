@@ -41,9 +41,9 @@ class BorrowViewSet(ModelViewSet):
         if user_id:
             queryset = self.queryset.filter(user_id=user_id)
         if str(is_active) == "true":
-            queryset = self.queryset.filter(actual_return=None)
+            queryset = self.queryset.filter(actual_return__isnull=False)
         if str(is_active) == "false":
-            queryset = self.queryset.filter(actual_return=not None)
+            queryset = self.queryset.filter(actual_return__isnull=True)
         if self.request.user.is_staff:
             return queryset
         return queryset.filter(user=self.request.user).distinct()
