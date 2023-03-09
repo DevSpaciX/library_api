@@ -1,0 +1,106 @@
+[
+{
+    "model": "borrowing.borrow",
+    "pk": 1,
+    "fields": {
+        "borrow_date": "2023-03-08",
+        "expected_return": "2023-03-06",
+        "actual_return": "2023-03-08",
+        "book": 1,
+        "user": 1
+    }
+},
+{
+    "model": "borrowing.borrow",
+    "pk": 2,
+    "fields": {
+        "borrow_date": "2023-03-08",
+        "expected_return": "2023-04-07",
+        "actual_return": "2023-03-08",
+        "book": 1,
+        "user": 1
+    }
+},
+{
+    "model": "library.book",
+    "pk": 1,
+    "fields": {
+        "title": "Harry",
+        "author": "Jo Rowling",
+        "cover": false,
+        "inventory": 124,
+        "daily_fee": "3.00",
+        "need_to_refill": false
+    }
+},
+{
+    "model": "library.book",
+    "pk": 2,
+    "fields": {
+        "title": "Avatar",
+        "author": "James Camron",
+        "cover": false,
+        "inventory": 123,
+        "daily_fee": "2.00",
+        "need_to_refill": false
+    }
+},
+{
+    "model": "library.book",
+    "pk": 3,
+    "fields": {
+        "title": "IT",
+        "author": "Steven King",
+        "cover": false,
+        "inventory": 32,
+        "daily_fee": "12.00",
+        "need_to_refill": false
+    }
+},
+{
+    "model": "library.book",
+    "pk": 4,
+    "fields": {
+        "title": "Hello from Jungle",
+        "author": "Steven King",
+        "cover": false,
+        "inventory": 32,
+        "daily_fee": "1.00",
+        "need_to_refill": false
+    }
+},
+{
+    "model": "user.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$390000$SCaH2bPPD5ZUYR0nQE8X8r$5wxGF4zzzeaj00jEVAZ/QdZL5x3ZyO/KydOEakom+TY=",
+        "last_login": "2023-03-08T18:48:13.217Z",
+        "is_superuser": true,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2023-03-08T18:47:55.152Z",
+        "email": "admin@admin.com",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "user.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$390000$w962wXKrLN9i9H9qEHgK3R$Sd6oIbeNaJ/bC+lgHH7mE6VEDU4p4H53qULdWZtCGyM=",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-03-08T19:22:06.274Z",
+        "email": "user@gmail.com",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

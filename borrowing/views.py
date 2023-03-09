@@ -18,7 +18,7 @@ from borrowing.models import Borrow
 from borrowing.serializers import (
     BorrowSerializer,
     BorrowListSerializer,
-    BorrowReturnSerializer, BorrowDetailSerializer,
+    BorrowReturnSerializer, BorrowDetailSerializer
 )
 
 
@@ -49,42 +49,42 @@ class BorrowViewSet(ModelViewSet):
             return queryset
         return queryset.filter(user=self.request.user).distinct()
 
-    def get_serializer_class(self) -> Type[Union[BorrowListSerializer, BorrowDetailSerializer, BorrowReturnSerializer, BorrowSerializer]]:
+    def get_serializer_class(self) -> Type[Union[BorrowListSerializer, BorrowDetailSerializer, BorrowSerializer]]:
 
         if self.action == "list":
             return BorrowListSerializer
         if self.action == "retrieve":
             return BorrowDetailSerializer
-        if self.action == "return_book":
-            return BorrowReturnSerializer
         return BorrowSerializer
 
     def perform_create(self, serializer: BorrowSerializer) -> None:
         serializer.save(user=self.request.user)
 
     @transaction.atomic()
-    @action(methods=["POST"], detail=True, url_path="return")
+    @action(methods=["GET", "POST"], detail=True, url_path="return", serializer_class=None)
     def return_book(self, request: Any, pk: int = None) -> Response:
         """Endpoint for returning book and close the borrow"""
         borrow = get_object_or_404(Borrow, pk=pk)
-        serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        if borrow.actual_return is not None:
-            raise ValidationError("This book has already been returned.")
-        if self.request.user != borrow.user:
-            raise ValidationError("You can`t return book which not yours")
-        borrow.actual_return = timezone.now()
-        borrow.save()
-        book = borrow.book
-        book.inventory += 1
-        if book.inventory >= 1 and book.need_to_refill:
-            book.need_to_refill = False
-        book.save()
-        return Response(
-            {"status": "Your book was successfully returned"},
-            status=status.HTTP_200_OK,
-        )
+        if request.method == "GET":
+            serializer = BorrowReturnSerializer(borrow)
+            return Response(serializer.data)
+        elif request.method == "POST":
+            if borrow.actual_return is not None:
+                raise ValidationError("This book has already been returned.")
+            if self.request.user != borrow.user:
+                raise ValidationError("You can`t return book which not yours")
+            borrow.actual_return = timezone.now()
+            borrow.save()
+            book = borrow.book
+            book.inventory += 1
+            if book.inventory >= 1 and book.need_to_refill:
+                book.need_to_refill = False
+            book.save()
+            return Response(
+                {"status": "Your book was successfully returned",
+                 },
+                status=status.HTTP_200_OK,
+            )
 
     @extend_schema(
         parameters=[
