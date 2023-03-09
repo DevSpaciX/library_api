@@ -2,24 +2,23 @@ from typing import Any, Type
 from urllib.request import Request
 
 from django.db import transaction
+from django.db.models import QuerySet
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.pagination import PageNumberPagination
 from django.utils import timezone
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
 from rest_framework.viewsets import ModelViewSet
 
 from borrowing.models import Borrow
 from borrowing.serializers import (
     BorrowSerializer,
     BorrowListSerializer,
-    BorrowReturnSerializer
 )
 
 
@@ -35,7 +34,7 @@ class BorrowViewSet(ModelViewSet):
     pagination_class = MyPagination
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self) -> Any:
+    def get_queryset(self) -> QuerySet:
         """Retrieve the borrows with filters"""
         queryset = self.queryset
         user_id = self.request.query_params.get("user_id")
@@ -50,7 +49,7 @@ class BorrowViewSet(ModelViewSet):
             return queryset
         return queryset.filter(user=self.request.user).distinct()
 
-    def get_serializer_class(self) -> Type[Serializer]:
+    def get_serializer_class(self) -> Type[serializers.Serializer]:
 
         if self.action in ["list", "retrieve"]:
             return BorrowListSerializer
@@ -60,30 +59,26 @@ class BorrowViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
 
     @transaction.atomic()
-    @action(methods=["GET", "POST"], detail=True, url_path="return", serializer_class=None)
+    @action(methods=["POST"], detail=True, url_path="return", serializer_class=None)
     def return_book(self, request: Any, pk: int = None) -> Response:
         """Endpoint for returning book and close the borrow"""
         borrow = get_object_or_404(Borrow, pk=pk)
-        if request.method == "GET":
-            serializer = BorrowReturnSerializer(borrow)
-            return Response(serializer.data)
-        elif request.method == "POST":
-            if borrow.actual_return is not None:
-                raise ValidationError("This book has already been returned.")
-            if self.request.user != borrow.user:
-                raise ValidationError("You can`t return book which not yours")
-            borrow.actual_return = timezone.now()
-            borrow.save()
-            book = borrow.book
-            book.inventory += 1
-            if book.inventory >= 1 and book.need_to_refill:
-                book.need_to_refill = False
-            book.save()
-            return Response(
-                {"status": "Your book was successfully returned",
-                 },
-                status=status.HTTP_200_OK,
-            )
+        if borrow.actual_return is not None:
+            raise ValidationError("This book has already been returned.")
+        if self.request.user != borrow.user:
+            raise ValidationError("You can`t return book which not yours")
+        borrow.actual_return = timezone.now()
+        borrow.save()
+        book = borrow.book
+        book.inventory += 1
+        if book.inventory >= 1 and book.need_to_refill:
+            book.need_to_refill = False
+        book.save()
+        return Response(
+            {"status": "Your book was successfully returned",
+             },
+            status=status.HTTP_200_OK,
+        )
 
     @extend_schema(
         parameters=[

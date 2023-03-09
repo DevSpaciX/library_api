@@ -1,4 +1,3 @@
-from datetime import date
 from typing import List
 
 from rest_framework.permissions import IsAdminUser, AllowAny, BasePermission
