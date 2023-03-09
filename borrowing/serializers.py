@@ -38,15 +38,6 @@ class BorrowListSerializer(BorrowSerializer):
         fields = "__all__"
 
 
-class BorrowDetailSerializer(BorrowSerializer):
-    book = serializers.CharField(source="book.title")
-    user = serializers.CharField(source="user.email")
-
-    class Meta:
-        model = Borrow
-        fields = "__all__"
-
-
 class BorrowReturnSerializer(serializers.ModelSerializer):
     book = serializers.CharField(source="book.title")
 

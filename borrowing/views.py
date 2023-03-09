@@ -49,12 +49,10 @@ class BorrowViewSet(ModelViewSet):
             return queryset
         return queryset.filter(user=self.request.user).distinct()
 
-    def get_serializer_class(self) -> Type[Union[BorrowListSerializer, BorrowDetailSerializer, BorrowSerializer]]:
+    def get_serializer_class(self) -> Type[BorrowListSerializer, BorrowDetailSerializer, BorrowSerializer]:
 
-        if self.action == "list":
+        if self.action in ["list", "retrieve"]:
             return BorrowListSerializer
-        if self.action == "retrieve":
-            return BorrowDetailSerializer
         return BorrowSerializer
 
     def perform_create(self, serializer: BorrowSerializer) -> None:
