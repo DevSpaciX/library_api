@@ -1,4 +1,4 @@
-from typing import Any, Union, Type
+from typing import Any, Type
 from urllib.request import Request
 
 from django.db import transaction
@@ -12,13 +12,14 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 from rest_framework.viewsets import ModelViewSet
 
 from borrowing.models import Borrow
 from borrowing.serializers import (
     BorrowSerializer,
     BorrowListSerializer,
-    BorrowReturnSerializer, BorrowDetailSerializer
+    BorrowReturnSerializer
 )
 
 
@@ -49,7 +50,7 @@ class BorrowViewSet(ModelViewSet):
             return queryset
         return queryset.filter(user=self.request.user).distinct()
 
-    def get_serializer_class(self) -> Type[BorrowListSerializer, BorrowDetailSerializer, BorrowSerializer]:
+    def get_serializer_class(self) -> Type[Serializer]:
 
         if self.action in ["list", "retrieve"]:
             return BorrowListSerializer
