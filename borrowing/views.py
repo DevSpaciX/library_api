@@ -10,7 +10,6 @@ from django.utils import timezone
 from rest_framework import status, serializers
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -62,7 +61,7 @@ class BorrowViewSet(ModelViewSet):
     @action(methods=["POST"], detail=True, url_path="return", serializer_class=None)
     def return_book(self, request: Any, pk: int = None) -> Response:
         """Endpoint for returning book and close the borrow"""
-        borrow = get_object_or_404(Borrow, pk=pk)
+        borrow = self.get_object()
         if borrow.actual_return is not None:
             raise ValidationError("This book has already been returned.")
         if self.request.user != borrow.user:
